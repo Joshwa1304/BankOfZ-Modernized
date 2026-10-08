@@ -1,0 +1,4 @@
+# The datasource is supplied by BankOfZEndToEndTest (embedded PostgreSQL).
+bankofz:
+  jwt:
+    secret: test-secret-test-secret-test-secret-0123456789

@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: bankofz
+      POSTGRES_USER: bankofz
+      POSTGRES_PASSWORD: bankofz
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bankofz -d bankofz"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bankofz
+      SPRING_DATASOURCE_USERNAME: bankofz
+      SPRING_DATASOURCE_PASSWORD: bankofz
+      BANKOFZ_JWT_SECRET: change-me-to-a-long-random-secret-of-at-least-32-bytes
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./data:/app/data
+      - ./statements:/app/statements
+
+volumes:
+  pgdata:

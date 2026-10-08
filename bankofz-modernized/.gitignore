@@ -1,0 +1,6 @@
+target/
+statements/
+*.iml
+.idea/
+.vscode/
+*.log

@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: bankofz-modernized
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bankofz}
+    username: ${SPRING_DATASOURCE_USERNAME:bankofz}
+    password: ${SPRING_DATASOURCE_PASSWORD:bankofz}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  batch:
+    job:
+      # Jobs are started explicitly, e.g.
+      #   java -jar app.jar --spring.batch.job.enabled=true --spring.batch.job.name=imsDataMigrationJob inputDir=data/ims
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+bankofz:
+  account:
+    # IBACSUM returned at most 6 accounts (OCCURS 1 TO 6); now configurable.
+    summary-max-size: 6
+  jwt:
+    secret: ${BANKOFZ_JWT_SECRET:local-dev-secret-change-me-0123456789abcdef}
+    expiration-minutes: 30
+  statement:
+    # BNKSTMT defaulted to this sort code when the SORTCODE DD was empty.
+    default-sort-code: "123456"
+    output-dir: statements
+
+logging:
+  level:
+    com.bankofz: INFO
